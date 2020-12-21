@@ -1,3 +1,10 @@
 *~
 *.swp
 tags
+bundle/ag/
+plugged/OmniCppComplete/
+plugged/acp/
+plugged/denite-git/
+plugged/mark.vim/
+plugged/ultisnips/
+plugged/vim-snippets/
