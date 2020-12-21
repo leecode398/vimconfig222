@@ -1,0 +1,1 @@
+/home/xiang/.config/nvim
