@@ -17,7 +17,7 @@ set   expandtab                  "插入 <Tab> 时使用合适数量的空格
 set   tabstop=4                  "<Tab> 代表的空格数
 set   mouse=a                    "鼠标可用
 set   number                     "显示行号
-set relativenumber
+set   relativenumber
 set   history=1000               "命令历史显示1000条
 "set   foldenable                 "折叠
 set   nofoldenable
@@ -42,17 +42,61 @@ set   ignorecase                 "搜索模式里忽略大小写
 set   cursorline                 "突出当前行
 set   magic                      "正则表达式匹配形式
 " set autochdir
-set clipboard=unnamed
+set   clipboard=unnamed
 "set   list lcs=tab:\¦\ ,trail:·,extends:»,precedes:«,nbsp:%
-set encoding=utf-8
-set langmenu=zh_CN.UTF-8
-set backspace=2
+set   encoding=utf-8
+set   langmenu=zh_CN.UTF-8
+set   backspace=2
 " set ambiwidth=double          "防止特殊符号无法正常显示
-set listchars=tab:>-,trail:-
+set   listchars=tab:>-,trail:-
 "set term=screen-256color
-" 拼写检查
-set nospell
+set   nospell                   " 拼写检查
+set   list
 "}}}
+" Specify a directory for plugins
+" - For Neovim: stdpath('data') . '/plugged'
+" - Avoid using standard Vim directory names like 'plugin'
+call plug#begin('~/.vim/plugged')
+
+" Make sure you use single quotes
+
+" Plugin outside ~/.vim/plugged with post-update hook
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'mhinz/vim-startify'
+Plug 'liuchengxu/vista.vim'
+Plug 'easymotion/vim-easymotion'
+Plug 'flazz/vim-colorschemes'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'vim-scripts/gtags.vim'
+Plug 'bling/vim-bufferline'
+Plug 'vim-airline/vim-airline'
+Plug 'airblade/vim-gitgutter'
+Plug 'jiangmiao/auto-pairs'
+Plug 'ajmwagar/vim-deus'
+Plug 'jreybert/vimagit'
+Plug 'scrooloose/vim-fugitive'
+Plug 'mbriggs/mark.vim'
+Plug 'Shougo/denite.nvim'
+Plug 'chemzqm/denite-git'
+Plug 'lambdalisue/vim-gita'
+Plug 'jreybert/vimagit'
+Plug 'ddollar/nerdcommenter'
+Plug 'luochen1990/rainbow'
+Plug 'brooth/far.vim'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'honza/vim-snippets'
+Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
+Plug 'itchyny/vim-cursorword'
+Plug 'sbdchd/neoformat'
+Plug 'sirver/ultisnips'
+Plug 'whatot/gtags-cscope.vim'
+Plug 'yggdroot/leaderf'
+Plug 'vimwiki/vimwiki'
+Plug 'deris/vim-shot-f'
+Plug 'antoinemadec/coc-fzf'
+"Plug 'Valloric/YouCompleteMe'
+" Initialize plugin system
+call plug#end()
 " ---------------------------------------------------------
 "  ACTION SETTINGS
 " ---------------------------------------------------------
@@ -67,6 +111,8 @@ nnoremap <C-h> <C-W>h
 nnoremap <C-j> <C-W>j
 nnoremap <C-k> <C-W>k
 nnoremap <C-l> <C-W>l
+nmap <C-W>v <C-W>v<c-l>
+nmap <C-W>s <C-W>s<c-j>
 "}}}
 " ---------------------------------------------------------
 "  MAPPING SETTINGS
@@ -76,10 +122,6 @@ let mapleader=","
 let maplocalleader=";"
 "}}}
 " FUNCTION: Personal Map-key {{{1
-nnoremap <F3> : set clipboard^=unnamed,unnamedplus <CR>
-nmap <F2> :noh<cr>
-
-nmap <leader>t gg<CR>:call TitleDet()<CR>
 "nmap <leader>lkup <Plug>LookupFile<cr>
 map  <leader><space>  :s/\s\+$//ge<cr>
 map  <leader><tab>    :s/	/    /g<cr>
@@ -99,7 +141,6 @@ nmap <leader>sf :cs find f <C-R>=expand("<cfile>")<cr><cr>
 nmap <leader>si :cs find i <C-R>=expand("<cfile>")<cr><cr>
 nmap <leader>sd :cs find d <C-R>=expand("<cword>")<cr><cr>
 nmap <leader>zz <C-w>o
-nmap <leader>gs :GetScripts<cr>
 
 nmap <Leader>k <Plug>MarkSet
 "}}}
@@ -133,7 +174,8 @@ let showmarks_hlline_upper = 1
 " TOOLS: System Sheat Plate {{{1
 " Map vim system shear plate by zhendongcao on 2017/8/3
 " http://blog.csdn.net/lalor/article/details/7272325
-map <C-c> "+y
+vmap <C-c> "+Y
+nmap <C-v> "+p
 " '%'     --- 文件打开位置，e.i. vim src/foo.txt >> src/foo.txt
 " '%:p'   --- 绝对路径, e.i. /something/src/foo.txt
 " '%:t'   --- foo.txt
@@ -188,8 +230,6 @@ nmap <C-f> :Leaderf gtags -g
 nmap <C-p> :FZF<CR>
 " q退出
 nmap q :q<CR>
-" ag
-noremap <Leader>a  :Ag -a <C-R>=expand("<cword>")<cr><cr>
 
 function! Escape(stuff)
     return substitute(escape(a:stuff, '\/.*$^~[]'), "\n", '\\n', "g")
@@ -209,49 +249,6 @@ nmap <leader>so :source ~/.vimrc<cr>
 " cscope -bkq -i cscope.files
 " ctags -R
 
-" Specify a directory for plugins
-" - For Neovim: stdpath('data') . '/plugged'
-" - Avoid using standard Vim directory names like 'plugin'
-call plug#begin('~/.vim/plugged')
-
-" Make sure you use single quotes
-
-" Plugin outside ~/.vim/plugged with post-update hook
-Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
-Plug 'mhinz/vim-startify'
-Plug 'liuchengxu/vista.vim'
-Plug 'easymotion/vim-easymotion'
-Plug 'flazz/vim-colorschemes'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'vim-scripts/gtags.vim'
-Plug 'bling/vim-bufferline'
-Plug 'vim-airline/vim-airline'
-Plug 'airblade/vim-gitgutter'
-Plug 'jiangmiao/auto-pairs'
-Plug 'ajmwagar/vim-deus'
-Plug 'jreybert/vimagit'
-Plug 'scrooloose/vim-fugitive'
-Plug 'mbriggs/mark.vim'
-Plug 'Shougo/denite.nvim'
-Plug 'chemzqm/denite-git'
-Plug 'lambdalisue/vim-gita'
-Plug 'jreybert/vimagit'
-Plug 'ddollar/nerdcommenter'
-Plug 'luochen1990/rainbow'
-Plug 'brooth/far.vim'
-"Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'honza/vim-snippets'
-Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
-Plug 'itchyny/vim-cursorword'
-Plug 'vim-scripts/OmniCppComplete'
-Plug 'sbdchd/neoformat'
-Plug 'eikenb/acp'
-Plug 'sirver/ultisnips'
-Plug 'whatot/gtags-cscope.vim'
-Plug 'yggdroot/leaderf'
-Plug 'ronakg/quickr-preview.vim'
-" Initialize plugin system
-call plug#end()
 """ buffer{{{
 " 顶部buffer目录
 let g:airline#extensions#tabline#enabled = 1
@@ -356,8 +353,8 @@ set laststatus=2
 " 退出主编辑窗口后，自动退出vim
 autocmd BufEnter * if 0 == len(filter(range(1, winnr('$')), 'empty(getbufvar(winbufnr(v:val), "&bt"))')) | qa! | endif
 "TAB键补全
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" : "\<TAB>"
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" : "\<TAB>"
       "\ <SID>check_back_space() ? "\<TAB>" :
       "\ coc#refresh()
 inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
@@ -565,7 +562,7 @@ noremap go :<C-U>Leaderf! rg --recall<CR>
 " should use `Leaderf gtags --update` first
 let g:Lf_GtagsAutoGenerate = 1
 let g:Lf_Gtagslabel = 'native-pygments'
-noremap <leader>fr :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <leader>fc :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>fg :<C-U><C-R>=printf("Leaderf! gtags -g %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
@@ -575,3 +572,190 @@ noremap <leader>a :<C-U><C-R>=printf("Leaderf! rg --no-ignore %s", expand("<cwor
 noremap <Leader>g  :Leaderf! rg --no-ignore 
 "termninal
 tnoremap <Esc> <C-\><C-n>
+noremap <c-s> :w<cr>
+"vimwiki
+ let g:vimwiki_list = [
+ \{"path": "~/myblog/vimwiki/", 
+ \ "path_html": "~/myblog/wiki/",
+ \ "syntax": "markdown", 
+ \ "ext": ".md",
+ \ "css_file": '~/myblog/vimwiki/wiki/style.css',
+ \ "custom_wiki2html": "~/myblog/vimwiki/misaka_md2html.py",
+ \ "auto_export": 0}
+ \]
+ nnoremap <Leader>r :e<cr>
+ " vim复制
+ if executable('clipboard-provider')
+    let g:clipboard = {
+          \ 'name': 'myClipboard',
+          \     'copy': {
+          \         '+': 'clipboard-provider copy',
+          \         '*': 'env COPY_PROVIDERS=tmux clipboard-provider copy',
+          \     },
+          \     'paste': {
+          \         '+': 'clipboard-provider paste',
+          \         '*': 'env COPY_PROVIDERS=tmux clipboard-provider paste',
+          \     },
+          \ }
+endif
+" coc config
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=300
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+" Use tab for trigger completion with characters ahead and navigate.
+" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" other plugin before putting this into your config.
+inoremap <silent><expr> <TAB>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<TAB>" :
+      \ coc#refresh()
+inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~# '\s'
+endfunction
+
+" Use <c-space> to trigger completion.
+if has('nvim')
+  inoremap <silent><expr> <c-space> coc#refresh()
+else
+  inoremap <silent><expr> <c-@> coc#refresh()
+endif
+
+" Make <CR> auto-select the first completion item and notify coc.nvim to
+" format on enter, <cr> could be remapped by other vim plugin
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+
+" Use `[g` and `]g` to navigate diagnostics
+" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+nmap <silent> [g <Plug>(coc-diagnostic-prev)
+nmap <silent> ]g <Plug>(coc-diagnostic-next)
+
+" GoTo code navigation.
+nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gy <Plug>(coc-type-definition)
+nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr <Plug>(coc-references)
+
+" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+" Highlight the symbol and its references when holding the cursor.
+autocmd CursorHold * silent call CocActionAsync('highlight')
+
+" Symbol renaming.
+nmap <leader>rn <Plug>(coc-rename)
+
+" Formatting selected code.
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
+
+augroup mygroup
+  autocmd!
+  " Setup formatexpr specified filetype(s).
+  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+  " Update signature help on jump placeholder.
+  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+augroup end
+
+" Applying codeAction to the selected region.
+" Example: `<leader>aap` for current paragraph
+"xmap <leader>a  <Plug>(coc-codeaction-selected)
+"nmap <leader>a  <Plug>(coc-codeaction-selected)
+
+" Remap keys for applying codeAction to the current buffer.
+nmap <leader>ac  <Plug>(coc-codeaction)
+" Apply AutoFix to problem on the current line.
+nmap <leader>qf  <Plug>(coc-fix-current)
+
+" Map function and class text objects
+" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
+xmap if <Plug>(coc-funcobj-i)
+omap if <Plug>(coc-funcobj-i)
+xmap af <Plug>(coc-funcobj-a)
+omap af <Plug>(coc-funcobj-a)
+xmap ic <Plug>(coc-classobj-i)
+omap ic <Plug>(coc-classobj-i)
+xmap ac <Plug>(coc-classobj-a)
+omap ac <Plug>(coc-classobj-a)
+
+" Remap <C-f> and <C-b> for scroll float windows/popups.
+if has('nvim-0.4.0') || has('patch-8.2.0750')
+  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
+  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
+endif
+
+" Use CTRL-S for selections ranges.
+" Requires 'textDocument/selectionRange' support of language server.
+"nmap <silent> <C-s> <Plug>(coc-range-select)
+"xmap <silent> <C-s> <Plug>(coc-range-select)
+
+" Add `:Format` command to format current buffer.
+command! -nargs=0 Format :call CocAction('format')
+
+" Add `:Fold` command to fold current buffer.
+command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+
+" Add `:OR` command for organize imports of the current buffer.
+command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+
+" Add (Neo)Vim's native statusline support.
+" NOTE: Please see `:h coc-status` for integrations with external plugins that
+" provide custom statusline: lightline.vim, vim-airline.
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+
+" Mappings for CoCList
+" Show all diagnostics.
+nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
+" Manage extensions.
+nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
+" Show commands.
+nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
+" Find symbol of current document.
+nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
+" Search workspace symbols.
+nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
+" Do default action for next item.
+nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
+" Do default action for previous item.
+nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
+" Resume latest coc list.
+nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
+" file.
+nnoremap <silent><nowait> <space>f  :<C-u>CocList files<CR>
+nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
