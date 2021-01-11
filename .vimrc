@@ -63,38 +63,30 @@ call plug#begin('~/.vim/plugged')
 " Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'mhinz/vim-startify'
-Plug 'liuchengxu/vista.vim'
+Plug 'majutsushi/tagbar'
 Plug 'easymotion/vim-easymotion'
 Plug 'flazz/vim-colorschemes'
-Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'vim-scripts/gtags.vim'
 Plug 'bling/vim-bufferline'
 Plug 'vim-airline/vim-airline'
 Plug 'airblade/vim-gitgutter'
 Plug 'jiangmiao/auto-pairs'
-Plug 'ajmwagar/vim-deus'
 Plug 'jreybert/vimagit'
 Plug 'scrooloose/vim-fugitive'
 Plug 'mbriggs/mark.vim'
 Plug 'Shougo/denite.nvim'
-Plug 'chemzqm/denite-git'
-Plug 'lambdalisue/vim-gita'
 Plug 'jreybert/vimagit'
 Plug 'ddollar/nerdcommenter'
 Plug 'luochen1990/rainbow'
 Plug 'brooth/far.vim'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'honza/vim-snippets'
 Plug 'Shougo/defx.nvim', { 'do': ':UpdateRemotePlugins' }
 Plug 'itchyny/vim-cursorword'
-Plug 'sbdchd/neoformat'
 Plug 'sirver/ultisnips'
 Plug 'whatot/gtags-cscope.vim'
 Plug 'yggdroot/leaderf'
 Plug 'vimwiki/vimwiki'
 Plug 'deris/vim-shot-f'
-Plug 'antoinemadec/coc-fzf'
-"Plug 'Valloric/YouCompleteMe'
 " Initialize plugin system
 call plug#end()
 " ---------------------------------------------------------
@@ -210,16 +202,7 @@ function! PRINT()
 	call append(line("."), "printf(\"%s:(%d)\\n\",__FUNCTION__,__LINE__);")
 endfunction
 
-function! CAMEOTAG()
-	call append(line("."), "/* CAMEOTAG:Modyfy by lixiang on ".strftime("20%y/%m/%d"))
-	call append(line(".")+1, " * ")
-	call append(line(".")+2, " * Cause:")
-	call append(line(".")+3, " * Solution:")
-	call append(line(".")+4, "*/")
-endfunction
-
 nmap <leader>1 : call PRINT() <cr>:w<CR>
-nmap <leader>2 : call CAMEOTAG() <cr>:w<CR>
 
 "}}}
 " TOOLS: My own Settings {{{1
@@ -242,12 +225,8 @@ nmap <leader>s :tabs<CR>
 nmap <leader>o :tabnew 
 " source vimrc
 nmap <leader>so :source ~/.vimrc<cr>
-
-
-
-" find . -name "*.h" -o -name "*.c"-o -name "*.cc" > cscope.files
-" cscope -bkq -i cscope.files
-" ctags -R
+nmap H ^
+nmap L $
 
 """ buffer{{{
 " 顶部buffer目录
@@ -270,7 +249,6 @@ noremap <Space>b :bp<cr>
 " close current buf
 noremap <Space>c :bd<cr>
 noremap <C-b> :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-noremap <Leader>m :LeaderfMru<cr> 
 noremap <localleader>v :vsplit<cr>
 noremap <localleader>s :split<cr>
 "}}}
@@ -295,89 +273,19 @@ colorscheme gruvbox
 let g:deus_termcolors=256"
 nnoremap <C-m> :Magit<cr>
 inoremap jj <ESC>
-inoremap jw <ESC>:w<cr>
+inoremap jk <ESC>:w<cr>
 inoremap <C-i> <ESC>I
 inoremap <C-a> <ESC>A
 noremap <M-s> :w<cr>
 vnoremap <localleader>w :'<,'>w! /home/xiang/work/vim-file/a<cr>
 noremap <localleader>r :r /home/xiang/work/vim-file/a<cr>
 nmap t <Plug>(easymotion-s2)
-" vista.vim
-
-" By default vista.vim never run if you don't call it explicitly.
-" "
-" " If you want to show the nearest function in your statusline automatically,
-" " you can add the following line to your vimrc
-let g:vista_executive_for = {
-            \ 'cpp': 'coc',
-            \ 'php': 'coc',
-            \ }
-let g:vista_ctags_cmd = {
-            \ 'haskell': 'hasktags -x -o - -c',
-            \ }
-let g:vista_fzf_preview = ['right:50%']
-let g:vista#renderer#enable_icon = 1
-let g:vista#renderer#icons = {
-            \   "function": "\uf794",
-            \   "variable": "\uf71b",
-            \  }
-let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
-function! NearestMethodOrFunction() abort
-      return get(b:, 'vista_nearest_method_or_function', '')
-endfunction
-  " By default vista.vim never run if you don't call it explicitly.
-  " "
-  " " If you want to show the nearest function in your statusline
-  " automatically,
-  " " you can add the following line to your vimrc
-autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
-let g:lightline = {
-      \ 'colorscheme': 'wombat',
-      \ 'active': {
-      \   'left': [ [ 'mode', 'paste'  ],
-      \             [ 'readonly', 'filename', 'modified', 'method'  ] ]
-      \ },
-      \ 'component_function': {
-      \   'method': 'NearestMethodOrFunction'
-      \ },
-      \ }
-let g:vista_sidebar_width = 50
-let g:vista_echo_cursor_strategy ='floating_win'
-" 启用悬浮窗预览
-let g:vista_default_executive = 'ctags'
-nnoremap <silent><nowait> <F7> :<C-u>Vista!!<cr>
 " powerline
 let g:Powerline_symbols = 'fancy'
 set encoding=utf-8 
 set laststatus=2
 " 退出主编辑窗口后，自动退出vim
 autocmd BufEnter * if 0 == len(filter(range(1, winnr('$')), 'empty(getbufvar(winbufnr(v:val), "&bt"))')) | qa! | endif
-"TAB键补全
-"inoremap <silent><expr> <TAB>
-      "\ pumvisible() ? "\<C-n>" : "\<TAB>"
-      "\ <SID>check_back_space() ? "\<TAB>" :
-      "\ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-"snippets
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<c-j>"
-let g:UltiSnipsJumpBackwardTrigger="<c-k>"
-let g:UltiSnipsListSnippets="<c-e>"
-
-" coc
-"let g:coc_snippet_next = '<tab>'
-"" Use <C-j> for jump to next placeholder, it's default of coc.nvim
-"let g:coc_snippet_next = '<c-j>'
-
-"" Use <C-k> for jump to previous placeholder, it's default of coc.nvim
-"let g:coc_snippet_prev = '<c-k>'
-"" Use <C-l> for trigger snippet expand.
-"imap <C-l> <Plug>(coc-snippets-expand)
 
 " Defx
 nnoremap <silent> <LocalLeader>e
@@ -471,41 +379,6 @@ function! s:defx_my_settings() abort
 "                \ defx#do_action('change_vim_cwd')
     nnoremap <C-l> <C-W>l
 endfunction
-" onmi
-set nocp
-filetype plugin on
-set ofu=syntaxcomplete#Complete
-let OmniCpp_ShowAccess = 1
-let OmniCpp_ShowPrototypeInAbbr = 1
-let OmniCpp_MayCompleteDot=1
-let OmniCpp_MayCompleteArrow=1
-let OmniCpp_MayCompleteScope=1
-let OmniCpp_NamespaceSearch=1
-let OmniCpp_GlobalScopeSearch=1
-let OmniCpp_SelectFirstItem = 2
-set completeopt=menu,menuone,longest
-set tags+=~/dragon/tags
-"set tags+=/home/xiang/trendnet/tags
-"set tags+=/home/xiang/buffalo/tags
-" 防止coc干扰补全
-"autocmd FileType cpp,hpp,h,c :call coc#config("suggest.autoTrigger", "none")
-"autocmd FileType vim,python,tex :call coc#config("suggest.autoTrigger", "always")
-" 自动更新tags
-function! UpdateCtags()
-    let curdir=getcwd()
-    while !filereadable("./tags")
-        cd ..
-        if getcwd() == "/"
-            break
-        endif
-    endwhile
-    if filewritable("./tags")
-        !sh ../cscope.sh
-    endif
-    execute ":cd " . curdir
-endfunction
-nmap <F10> :call UpdateCtags() :copen<CR>
-
 " 折叠
 syn region myFold start="{" end="}" transparent fold  " 设置起止符号 
 syn sync fromstart 
@@ -548,15 +421,15 @@ let g:Lf_PreviewResult = {'Function': 0, 'BufTag': 0 }
 
 let g:Lf_ShortcutF = "<leader>ff"
 noremap <leader>fb :<C-U><C-R>=printf("Leaderf buffer %s", "")<CR><CR>
-noremap <leader>fm :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
+noremap <leader>m :<C-U><C-R>=printf("Leaderf mru %s", "")<CR><CR>
 noremap <leader>ft :<C-U><C-R>=printf("Leaderf bufTag %s", "")<CR><CR>
 noremap <leader>fl :<C-U><C-R>=printf("Leaderf line %s", "")<CR><CR>
-noremap <leader>fu :<C-U><C-R>=printf("LeaderfFunction")<CR><CR>
+noremap <localleader>l :<C-U><C-R>=printf("LeaderfFunction")<CR><CR>
 
 "noremap <C-B> :<C-U><C-R>=printf("Leaderf! rg --current-buffer -e %s ", expand("<cword>"))<CR>
 "noremap <C-F> :<C-U><C-R>=printf("Leaderf! rg -e %s ", expand("<cword>"))<CR>
 " search visually selected text literally
-xnoremap gf :<C-U><C-R>=printf("Leaderf! rg -F -e %s ", leaderf#Rg#visual())<CR>
+xnoremap gf :<C-U><C-R>=printf("Leaderf! rg --no-ignore -F -e %s ", leaderf#Rg#visual())<CR><CR>
 noremap go :<C-U>Leaderf! rg --recall<CR>
 
 " should use `Leaderf gtags --update` first
@@ -564,7 +437,7 @@ let g:Lf_GtagsAutoGenerate = 1
 let g:Lf_Gtagslabel = 'native-pygments'
 noremap <leader>fc :<C-U><C-R>=printf("Leaderf! gtags -r %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>fd :<C-U><C-R>=printf("Leaderf! gtags -d %s --auto-jump", expand("<cword>"))<CR><CR>
-noremap <leader>fg :<C-U><C-R>=printf("Leaderf! gtags -g %s --auto-jump", expand("<cword>"))<CR><CR>
+noremap <C-j> :<C-U><C-R>=printf("Leaderf! gtags -g %s --auto-jump", expand("<cword>"))<CR><CR>
 noremap <leader>fo :<C-U><C-R>=printf("Leaderf! gtags --recall %s", "")<CR><CR>
 noremap <leader>fn :<C-U><C-R>=printf("Leaderf gtags --next %s", "")<CR><CR>
 noremap <leader>fp :<C-U><C-R>=printf("Leaderf gtags --previous %s", "")<CR><CR>
@@ -598,164 +471,83 @@ noremap <c-s> :w<cr>
           \     },
           \ }
 endif
-" coc config
-" TextEdit might fail if hidden is not set.
-set hidden
+let g:startify_change_to_dir = 0
 
-" Some servers have issues with backup files, see #649.
-set nobackup
-set nowritebackup
+"YoucomPleteMe:语句补全插件"
+set runtimepath+=~/.vim/bundle/YouCompleteMe
+let g:ycm_server_python_interpreter='/usr/bin/python3.8'    "python版本在3以上
+let g:ycm_global_ycm_extra_conf='~/.vim/.ycm_extra_conf.py' "加载文件路径
+"let g:ycm_clangd_binary_path = "~/ycm_temp/llvm_root_dir/bin/clangd"
+let g:clang_library_path='/usr/lib/llvm-10/lib/libclang.so'  "libclang路径
 
-" Give more space for displaying messages.
-set cmdheight=2
+autocmd InsertLeave * if pumvisible() == 0|pclose|endif     " 离开插入模式后自动关闭预览窗口"
+let g:ycm_collect_identifiers_from_tags_files = 1           " 开启YCM基于标签引擎
+let g:ycm_collect_identifiers_from_comments_and_strings = 1 " 注释与字符串中的内容也用于补全
+let g:syntastic_ignore_files=[".*\.py$"]
+let g:ycm_seed_identifiers_with_syntax = 1                  " 语法关键字补全
+let g:ycm_complete_in_strings = 1
+let g:ycm_confirm_extra_conf = 0                            " 关闭加载.ycm_extra_conf.py提示
+let g:ycm_key_list_select_completion = ['<c-n>', '<Down>']  " 映射按键,没有这个会拦截掉tab, 导致其他插件的tab不能用.
+let g:ycm_key_list_previous_completion = ['<c-p>', '<Up>']
+let g:ycm_key_invoke_completion = '<C-a>'  
+let g:ycm_complete_in_comments = 1                          " 在注释输入中也能补全
+let g:ycm_complete_in_strings = 1                           " 在字符串输入中也能补全
+let g:ycm_collect_identifiers_from_comments_and_strings = 1 " 注释和字符串中的文字也会被收入补全
+"let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+let g:ycm_show_diagnostics_ui = 0                           " 禁用语法检查
+let g:ycm_semantic_triggers = {
+					\'c,cpp,python,java,go,perl':['re!\w{2}'],
+					\'cs,lua,javascript':['re!\w{2}'],
+					\}
 
-" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
-" delays and poor user experience.
-set updatetime=300
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<CR>"             
+nnoremap gd :YcmCompleter GoToDefinitionElseDeclaration<CR>   
+let g:ycm_min_num_of_chars_for_completion = 2                 " 从第2个键入字符就开始罗列匹配项
+let g:ycm_max_num_candidates = 15							  " 候选数量设置
+let g:ycm_auto_trigger = 1									  " 签名帮助
+" 关闭ycm预览
+set completeopt=menu,menuone
+let g:ycm_add_preview_to_completeopt = 0
+let g:ycm_use_ultisnips_completer = 1
 
-" Don't pass messages to |ins-completion-menu|.
-set shortmess+=c
 
-" Always show the signcolumn, otherwise it would shift the text each time
-" diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
+"snippets
+let g:UltiSnipsExpandTrigger="<tab>"
+" 解决ycm与usnippet tab冲突
+function! g:UltiSnips_Complete()
+    call UltiSnips#ExpandSnippet()
+    if g:ulti_expand_res == 0
+        if pumvisible()
+            return "\<C-n>"
+        else
+            call UltiSnips#JumpForwards()
+            if g:ulti_jump_forwards_res == 0
+               return "\<TAB>"
+            endif
+        endif
+    endif
+    return ""
 endfunction
 
-" Use <c-space> to trigger completion.
-if has('nvim')
-  inoremap <silent><expr> <c-space> coc#refresh()
-else
-  inoremap <silent><expr> <c-@> coc#refresh()
-endif
+au BufEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsListSnippets="<c-e>"
+" this mapping Enter key to <C-y> to chose the current highlight item 
+" and close the selection list, same as other IDEs.
+" CONFLICT with some plugins like tpope/Endwise
+inoremap <expr> <CR> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+let g:UltiSnipsJumpForwardTrigger="<c-j>"
+let g:UltiSnipsJumpBackwardTrigger="<c-k>"
+let g:UltiSnipsListSnippets="<c-e>"
 
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" Highlight the symbol and its references when holding the cursor.
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
-
-" Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder.
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Applying codeAction to the selected region.
-" Example: `<leader>aap` for current paragraph
-"xmap <leader>a  <Plug>(coc-codeaction-selected)
-"nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap keys for applying codeAction to the current buffer.
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Apply AutoFix to problem on the current line.
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server.
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-" Remap <C-f> and <C-b> for scroll float windows/popups.
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-endif
-
-" Use CTRL-S for selections ranges.
-" Requires 'textDocument/selectionRange' support of language server.
-"nmap <silent> <C-s> <Plug>(coc-range-select)
-"xmap <silent> <C-s> <Plug>(coc-range-select)
-
-" Add `:Format` command to format current buffer.
-command! -nargs=0 Format :call CocAction('format')
-
-" Add `:Fold` command to fold current buffer.
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" Add `:OR` command for organize imports of the current buffer.
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add (Neo)Vim's native statusline support.
-" NOTE: Please see `:h coc-status` for integrations with external plugins that
-" provide custom statusline: lightline.vim, vim-airline.
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Mappings for CoCList
-" Show all diagnostics.
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions.
-nnoremap <silent><nowait> <space>e  :<C-u>CocList extensions<cr>
-" Show commands.
-nnoremap <silent><nowait> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document.
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols.
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list.
-nnoremap <silent><nowait> <space>p  :<C-u>CocListResume<CR>
-" file.
-nnoremap <silent><nowait> <space>f  :<C-u>CocList files<CR>
-nnoremap <silent> <space>y  :<C-u>CocList -A --normal yank<cr>
+"tagbar  
+""设置tagbar使用的ctags的插件,必须要设置对  
+let g:tagbar_ctags_bin='/usr/bin/ctags'  
+"设置tagbar的窗口宽度  
+let g:tagbar_width=50  
+""设置tagbar的窗口显示的位置,为左边  
+let g:tagbar_right=1  
+"打开文件自动 打开tagbar  
+"autocmd BufReadPost *.cpp,*.c,*.h,*.hpp,*.cc,*.cxx call tagbar#autoopen()  
+""映射tagbar的快捷键  
+map <F7> :TagbarToggle<CR>
